@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import WhatIfSimulation from './WhatIfSimulation';
+import Statistics from './Statistics';
 import { Train, ClipboardList, Zap, BarChart3, Settings, LogOut } from 'lucide-react';
 
 const menuItems = [
     { id: 'fleet', label: 'Fleet Status', icon: Train },
     { id: 'induction', label: 'Induction List', icon: ClipboardList },
     { id: 'simulation', label: 'What-If Simulation', icon: Zap },
+    { id: 'statistics', label: 'Statistics', icon: BarChart3 },
     { id: 'reports', label: 'Reports', icon: BarChart3 },
     { id: 'settings', label: 'Settings', icon: Settings },
 ];
@@ -82,6 +84,12 @@ function Sidebar({ activeTab, onTabChange, onLogout }) {
             {activeTab === 'simulation' && (
                 <div className="fixed inset-0 left-64 bg-white z-40 overflow-auto">
                     <WhatIfSimulation />
+                </div>
+            )}
+            {/* Statistics Page Overlay */}
+            {activeTab === 'statistics' && (
+                <div className="fixed inset-0 left-64 bg-white z-40 overflow-auto">
+                    <Statistics />
                 </div>
             )}
         </>

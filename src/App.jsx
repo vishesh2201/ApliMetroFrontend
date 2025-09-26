@@ -6,6 +6,8 @@ import InductionListDetailed from './components/InductionListDetailed';
 import { InductionListProvider } from './context/InductionListContext';
 import { TrainListProvider } from './context/TrainListContext';
 import LoadingScreen from './components/LoadingScreen'; // Import the LoadingScreen component
+import Statistics from './components/Statistics';
+import { StatisticsProvider } from './context/StatisticsContext';
 
 function App() {
   const [activeTab, setActiveTab] = useState('fleet');
@@ -29,11 +31,12 @@ function App() {
   return (
     <TrainListProvider>
       <InductionListProvider>
-        <div className="flex h-screen">
-          <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onLogout={handleLogout} />
+        <StatisticsProvider>
+          <div className="flex h-screen">
+            <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onLogout={handleLogout} />
 
-          <main className={`flex-1 bg-gray-50 w-full lg:ml-64`}>
-            {/* Removed: <div className="p-6">
+            <main className={`flex-1 bg-gray-50 w-full lg:ml-64`}>
+              {/* Removed: <div className="p-6">
                 <button
                     onClick={handleGenerateOptimization}
                     className="mb-4 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
@@ -42,48 +45,54 @@ function App() {
                 </button>
             </div> */}
 
-            {activeTab === 'fleet' && (
-              <div className="flex flex-col lg:flex-row lg:space-x-2 h-full w-full p-6">
-                <div className={`h-full w-full ${showInductionList ? (isInductionListCollapsed ? 'flex-1' : 'lg:w-2/3') : 'flex-1'}`}> {/* Conditional width for FleetTable */}
-                  <div className="h-full max-h-full overflow-auto">
-                    <FleetTable showInductionList={showInductionList} setShowInductionList={setShowInductionList} />
-                  </div>
-                </div>
-                {showInductionList && ( // Conditionally render InductionList container
-                  <div className={`w-full ${isInductionListCollapsed ? 'lg:w-20' : 'lg:w-1/3'} h-full`}> {/* Conditional width for InductionList */}
+              {activeTab === 'fleet' && (
+                <div className="flex flex-col lg:flex-row lg:space-x-2 h-full w-full p-6">
+                  <div className={`h-full w-full ${showInductionList ? (isInductionListCollapsed ? 'flex-1' : 'lg:w-2/3') : 'flex-1'}`}> {/* Conditional width for FleetTable */}
                     <div className="h-full max-h-full overflow-auto">
-                      <InductionList
-                        isCollapsed={isInductionListCollapsed}
-                        setIsCollapsed={setIsInductionListCollapsed}
-                      />
+                      <FleetTable showInductionList={showInductionList} setShowInductionList={setShowInductionList} />
                     </div>
                   </div>
-                )}
-              </div>
-            )}
-            {activeTab === 'induction' && (
-              <div className="w-full h-full max-h-full overflow-auto p-6">
-                <InductionListDetailed />
-              </div>
-            )}
-            {activeTab === 'simulation' && (
-              <div className="h-full max-h-full overflow-auto flex items-center justify-center text-xl text-gray-500 w-full p-6">
-                What-If Simulation coming soon...
-              </div>
-            )}
-            {activeTab === 'reports' && (
-              <div className="h-full max-h-full overflow-auto flex items-center justify-center text-xl text-gray-500 w-full p-6">
-                Reports coming soon...
-              </div>
-            )}
-            {activeTab === 'settings' && (
-              <div className="h-full max-h-full overflow-auto flex items-center justify-center text-xl text-gray-500 w-full p-6">
-                Settings coming soon...
-              </div>
-            )}
-          </main>
-        </div>
-        {isLoading && <LoadingScreen />} { /* Conditionally render LoadingScreen as an overlay */}
+                  {showInductionList && ( // Conditionally render InductionList container
+                    <div className={`w-full ${isInductionListCollapsed ? 'lg:w-20' : 'lg:w-1/3'} h-full`}> {/* Conditional width for InductionList */}
+                      <div className="h-full max-h-full overflow-auto">
+                        <InductionList
+                          isCollapsed={isInductionListCollapsed}
+                          setIsCollapsed={setIsInductionListCollapsed}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+              {activeTab === 'induction' && (
+                <div className="w-full h-full max-h-full overflow-auto p-6">
+                  <InductionListDetailed />
+                </div>
+              )}
+              {activeTab === 'simulation' && (
+                <div className="h-full max-h-full overflow-auto flex items-center justify-center text-xl text-gray-500 w-full p-6">
+                  What-If Simulation coming soon...
+                </div>
+              )}
+              {activeTab === 'reports' && (
+                <div className="h-full max-h-full overflow-auto flex items-center justify-center text-xl text-gray-500 w-full p-6">
+                  Reports coming soon...
+                </div>
+              )}
+              {activeTab === 'statistics' && (
+                <div className="w-full h-full max-h-full overflow-auto p-6">
+                  <Statistics />
+                </div>
+              )}
+              {activeTab === 'settings' && (
+                <div className="h-full max-h-full overflow-auto flex items-center justify-center text-xl text-gray-500 w-full p-6">
+                  Settings coming soon...
+                </div>
+              )}
+            </main>
+          </div>
+          {isLoading && <LoadingScreen />} { /* Conditionally render LoadingScreen as an overlay */}
+        </StatisticsProvider>
       </InductionListProvider>
     </TrainListProvider>
   );

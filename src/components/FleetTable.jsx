@@ -22,6 +22,7 @@ import { useInductionList } from '../context/InductionListContext';
 import '../custom-status-colors.css';
 import { Search, AlertTriangle, PlusCircle } from 'lucide-react';
 import OverrideModal from './OverrideModal';
+import '../flicker.css';
 
 function getColor(status) {
     // Custom color codes for boxes
@@ -389,7 +390,7 @@ function FleetTable({ onTrainSelect, showInductionList, setShowInductionList }) 
                                 <td className="p-3 cursor-pointer hover:bg-gray-200" onClick={(event) => handleOverrideClick(train.id, event)}>
                                     {train.override.flag && (
                                         <span title="Override" className="inline-flex items-center justify-center">
-                                            <AlertTriangle size={25} className="text-red-500" />
+                                            <AlertTriangle size={25} className="text-red-500 flicker" />
                                         </span>
                                     )}
                                     {!train.override.flag && (

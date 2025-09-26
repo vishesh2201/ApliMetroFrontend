@@ -1,6 +1,6 @@
 import React from 'react';
 import Lottie from 'lottie-react';
-import trainAnimation from '../assets/RP_TRAIN_1.json'; // Import your Lottie JSON file
+import trainAnimation from '../assets/RP_Train_1.json'; // Import your Lottie JSON file
 
 const LoadingScreen = () => {
     return (
