@@ -46,7 +46,7 @@ function getColor(status) {
 }
 
 
-function FleetTable({ onTrainSelect, showInductionList, setShowInductionList }) {
+function FleetTable({ onTrainSelect }) {
     const { trainList, setTrainList, loading, error } = useTrainList();
     const { setInductionList, setLoading } = useInductionList();
     const [searchTerm, setSearchTerm] = useState('');
@@ -189,23 +189,8 @@ function FleetTable({ onTrainSelect, showInductionList, setShowInductionList }) 
                         >
                             {filteredTrains.length + 1} trains
                         </span>
-                        {showInductionList ? (
-                            <button
-                                onClick={() => setShowInductionList(false)}
-                                className="px-3 py-2 rounded-full text-md font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors"
-                                style={{ background: 'linear-gradient(90deg, #4318FF 0%, #4285F4 100%)', color: '#fff' }}
-                            >
-                                Hide Induction List
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => setShowInductionList(true)}
-                                className="px-3 py-2 rounded-full text-md font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors"
-                                style={{ background: 'linear-gradient(90deg, #4318FF 0%, #4285F4 100%)', color: '#fff' }}
-                            >
-                                Show Induction List
-                            </button>
-                        )}
+                        {/* Buttons to toggle induction list visibility - REMOVED */}
+
                     </div>
                 </div>
                 <div className="flex gap-4 items-center mb-4">

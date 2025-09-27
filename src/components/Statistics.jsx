@@ -7,6 +7,7 @@ import FleetUtilizationChart from './FleetUtilizationChart';
 import JobCardSeverityChart from './JobCardSeverityChart';
 import TrainAgeDistributionChart from './TrainAgeDistributionChart';
 import DepotDistributionChart from './DepotDistributionChart';
+import JobCardsResolvedChart from './JobCardsResolvedChart';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -120,6 +121,10 @@ const Statistics = () => {
     const { totalTrains, jobCardBacklog, severityBreakdown, odometers, loadingOdo } = useStatistics();
     const trainAgeData = getTrainAgeData(odometers);
 
+    // Mock data for job cards raised/resolved
+    const jobCardsRaised = mockTrains.reduce((sum, t) => sum + (t.jobCards?.all?.length || 0), 0);
+    const jobCardsResolved = mockTrains.reduce((sum, t) => sum + (t.jobCards?.resolved?.length || 0), 0);
+
     return (
         <div className="p-4 bg-gray-50">
             <h1 className="font-bold mb-4 text-[#4285F4]" style={{ fontSize: '2rem' }}>Statistics</h1>
@@ -222,6 +227,9 @@ const Statistics = () => {
                 </div>
                 <div className="bg-white rounded shadow p-4">
                     <JobCardSeverityChart data={jobCardSeverityData} />
+                </div>
+                <div className="bg-white rounded shadow p-4">
+                    <JobCardsResolvedChart data={{ raised: jobCardsRaised, resolved: jobCardsResolved }} />
                 </div>
                 <div className="bg-white rounded shadow p-4">
                     {loadingOdo ? (
