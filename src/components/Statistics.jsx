@@ -138,7 +138,7 @@ const Statistics = () => {
                     </div>
                     <div className="flex-1 flex flex-col items-center justify-center">
                         <div className="text-5xl font-bold" style={{ color: '#000000' }}>
-                            21
+                            16
                         </div>
                         <div className="pt-4 text-sm font-normal" style={{ color: '#A3A7AF' }}>
                             compared to yesterday: <span style={{ color: '#49AF4E', fontWeight: 600 }}>2<span style={{ color: '#49AF4E' }}>+</span></span>
@@ -153,7 +153,7 @@ const Statistics = () => {
                     </div>
                     <div className="flex-1 flex justify-center">
                         <div className="text-5xl font-bold" style={{ color: '#000000' }}>
-                            {totalTrains + 1}
+                            {totalTrains}
                         </div>
                     </div>
                 </div>
@@ -166,7 +166,7 @@ const Statistics = () => {
                     <div className="flex-1 flex flex-col items-center justify-center">
                         <div className="text-5xl font-bold" style={{ color: '#000000' }}>
                             {/* You may want to update this to use real data as well */}
-                            {underMaintenance}
+                            9
                         </div>
                         <div className="pt-4 text-sm font-normal whitespace-nowrap" style={{ color: '#A3A7AF' }}>
                             compared to yesterday:{" "}

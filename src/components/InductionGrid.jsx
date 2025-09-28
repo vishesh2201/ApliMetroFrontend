@@ -33,11 +33,40 @@ function InductionGrid() {
     const { trainList } = useTrainList();
     const grid = assignTrainsToGrid(trainList);
 
+    // Handler for sending induction email
+    const handleSendEmail = async () => {
+        try {
+            const response = await fetch('/webhook-test/d49a6911-2574-400b-ac3b-e13eca8e3f8d', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ trigger: 'send_email' }),
+            });
+            if (response.ok) {
+                alert('Email sent successfully!');
+            } else {
+                alert('Failed to send email.');
+            }
+        } catch (error) {
+            alert('Error sending email.');
+        }
+    };
+
     return (
         <div className="w-full h-[calc(100vh-64px)] overflow-auto p-4 flex flex-col gap-8">
             {/* IBL Section */}
             <div className="flex flex-col gap-2">
-                <span className="text-base font-extrabold text-left" style={{ color: '#4285F4' }}>INSPECTION BAY LINE</span>
+                <div className="flex flex-row items-center justify-between">
+                    <span className="text-base font-extrabold text-left" style={{ color: '#4285F4' }}>INSPECTION BAY LINE</span>
+                    <button
+                        onClick={handleSendEmail}
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded shadow text-xs"
+                        style={{ marginLeft: '16px' }}
+                    >
+                        Send Induction Email
+                    </button>
+                </div>
                 <div className="flex flex-col gap-2">
                     {[1, 2, 3].map(track => (
                         <div key={`IBL_ROW_${track}`} className="flex flex-row items-center gap-4">
