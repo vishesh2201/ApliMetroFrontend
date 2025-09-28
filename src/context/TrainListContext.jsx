@@ -27,6 +27,7 @@ export function TrainListProvider({ children }) {
                     }
                     return {
                         id: train.id,
+                        depotId: train.depotId || "Muttom", // Assuming a default depotId if not present
                         fitness: train.certificates,
                         mileage: train.mileage,
                         branding: train.branding,

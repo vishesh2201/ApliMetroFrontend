@@ -5,6 +5,34 @@ function InductionTrainDetailBox({ train, idx }) {
     // Determine border color by criticality
     const hasCritical = train.violations && train.violations.some(v => v.toLowerCase().includes('critical') || v.toLowerCase().includes('safety'));
     const borderColor = hasCritical ? 'border-red-500' : train.score >= 80 ? 'border-green-400' : train.score >= 60 ? 'border-yellow-400' : 'border-gray-300';
+    // Helper to extract explanation from mixed formats
+    function extractExplanation(raw) {
+        if (!raw) return null;
+        // Remove code block markers and try to parse JSON
+        let cleaned = raw;
+        // Remove triple backticks, double backticks, and 'json' or 'Json' markers
+        cleaned = cleaned.replace(/```json[\s\S]*?({[\s\S]*?})[\s\S]*?```/, '$1');
+        cleaned = cleaned.replace(/```[\s\S]*?({[\s\S]*?})[\s\S]*?```/, '$1');
+        cleaned = cleaned.replace(/``\s*Json[\s\S]*?({[\s\S]*?})[\s\S]*?``\s*/i, '$1');
+        cleaned = cleaned.replace(/``/g, '');
+        // Try to parse JSON
+        try {
+            const parsed = JSON.parse(cleaned);
+            let explanation = '';
+            if (parsed.Explanation) explanation = parsed.Explanation;
+            else {
+                // fallback to first value if Explanation not present
+                const firstValue = Object.values(parsed)[0];
+                if (typeof firstValue === 'string') explanation = firstValue;
+            }
+            // Remove curly braces, inverted commas, and trailing braces if present
+            return explanation.replace(/^{|}$/g, '').replace(/"/g, '').replace(/\s*}$/g, '').trim();
+        } catch {
+            // If not JSON, just return cleaned string without curly braces, inverted commas, or trailing braces
+            return cleaned.replace(/^{|}$/g, '').replace(/"/g, '').replace(/\s*}$/g, '').trim();
+        }
+        return cleaned.replace(/^{|}$/g, '').replace(/"/g, '').replace(/\s*}$/g, '').trim();
+    }
     return (
         <div className={`w-full flex flex-col p-3 sm:p-4 rounded-lg border-2 ${borderColor} bg-white shadow-sm`}>
             <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-2">
@@ -19,19 +47,7 @@ function InductionTrainDetailBox({ train, idx }) {
                 <div className="text-xs sm:text-sm text-gray-500">Stabling Bay: <span className="font-mono">{idx + 1}</span></div>
             </div>
             <div className="mb-2 text-xs sm:text-sm text-[#0000008A] font-semibold">
-                {(() => {
-                    if (!train.explanation) return null;
-                    let explanationText = '';
-                    try {
-                        // Try to parse as JSON if it looks like an object
-                        const parsed = typeof train.explanation === 'string' ? JSON.parse(train.explanation) : train.explanation;
-                        explanationText = parsed.Explanation || JSON.stringify(parsed);
-                    } catch {
-                        // Fallback: show as plain string
-                        explanationText = train.explanation;
-                    }
-                    return explanationText;
-                })()}
+                {extractExplanation(train.explanation)}
             </div>
             <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 <div>

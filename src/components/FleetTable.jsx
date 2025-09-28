@@ -89,7 +89,7 @@ function FleetTable({ onTrainSelect }) {
                 },
                 body: JSON.stringify(trainList.map(train => ({
                     id: train.id,
-                    depotId: train.depotId || "D1", // Assuming a default depotId if not present
+                    depotId: train.depotId || "Muttom", // Assuming a default depotId if not present
                     certificates: train.fitness,
                     jobCards: { count: train.jobCards.count, all: train.jobCards.all },
                     mileage: train.mileage,
@@ -97,6 +97,8 @@ function FleetTable({ onTrainSelect }) {
                     cleaningSlot: train.cleaningSlot,
                     crew: train.crew,
                     override: train.override,
+                    serviceStatus: train.serviceStatus || 'inService', // Default to 'In Service' if not present
+                    arrivalTime: train.arrivalTime || null,
                 }))),
             });
 
@@ -109,7 +111,7 @@ function FleetTable({ onTrainSelect }) {
 
             // Process optimizerOutput for TrainListContext
             const updatedTrainList = trainList.map(train => {
-                const optimizedTrainData = optimizerOutput.D1.trains.find(
+                const optimizedTrainData = optimizerOutput[train.depotId].trains.find(
                     optTrain => optTrain.trainId === train.id
                 );
                 if (optimizedTrainData) {
@@ -121,6 +123,9 @@ function FleetTable({ onTrainSelect }) {
                         reason: optimizedTrainData.reason,
                         violations: optimizedTrainData.violations,
                         explanation: optimizedTrainData.explanation,
+                        assignedBay: optimizedTrainData.assignedBay,
+                        taskFlow: optimizedTrainData.taskFlow,
+                        taskDuration: optimizedTrainData.taskDuration,
                     };
                 }
                 return train;
@@ -128,28 +133,34 @@ function FleetTable({ onTrainSelect }) {
             setTrainList(updatedTrainList);
 
             // Process optimizerOutput for InductionListContext
-            const transformedInductionList = optimizerOutput.D1.trains.map(optTrain => {
-                const originalTrainData = trainList.find(train => train.id === optTrain.trainId);
-                return {
-                    trainId: optTrain.trainId,
-                    train: optTrain.trainId, // InductionListDetailed uses 'train' for trainId
-                    score: optTrain.totalScore, // InductionListDetailed uses 'score' for totalScore
-                    totalScore: optTrain.totalScore,
-                    eligible: optTrain.eligible,
-                    relativeScores: optTrain.relativeScores,
-                    reason: optTrain.reason,
-                    violations: optTrain.violations,
-                    explanation: optTrain.explanation,
-                    stablingBay: originalTrainData?.stablingBay || '-', // Get stablingBay from original trainList
-                    jobCards: originalTrainData?.jobCards || {}, // Carry over jobCards from original trainList
-                    branding: originalTrainData?.branding || {},
-                    mileage: originalTrainData?.mileage || {},
-                    cleaningSlot: originalTrainData?.cleaningSlot || false,
-                    fitness: originalTrainData?.fitness || {},
-                    crew: originalTrainData?.crew || {},
-                    override: originalTrainData?.override || {},
-                };
-            }).sort((a, b) => b.score - a.score); // Sort by score descending
+            const transformedInductionList = Object.values(optimizerOutput).flatMap(depotData =>
+                depotData.trains.map(optTrain => {
+                    const originalTrainData = trainList.find(train => train.id === optTrain.trainId);
+                    const optimizedTrainData = depotData.trains.find(
+                        data => data.trainId === optTrain.trainId
+                    ); // Declare optimizedTrainData within this scope
+                    return {
+                        trainId: optTrain.trainId,
+                        train: optTrain.trainId, // InductionListDetailed uses 'train' for trainId
+                        score: optTrain.totalScore, // InductionListDetailed uses 'score' for totalScore
+                        totalScore: optTrain.totalScore,
+                        eligible: optTrain.eligible,
+                        relativeScores: optTrain.relativeScores,
+                        reason: optTrain.reason,
+                        violations: optTrain.violations,
+                        explanation: optTrain.explanation,
+                        assignedBay: optimizedTrainData?.assignedBay,
+                        taskFlow: optimizedTrainData?.taskFlow,
+                        taskDuration: optimizedTrainData?.taskDuration, // Get stablingBay from original trainList
+                        jobCards: originalTrainData?.jobCards || {}, // Carry over jobCards from original trainList
+                        branding: originalTrainData?.branding || {},
+                        mileage: originalTrainData?.mileage || {},
+                        cleaningSlot: originalTrainData?.cleaningSlot || false,
+                        fitness: originalTrainData?.fitness || {},
+                        crew: originalTrainData?.crew || {},
+                        override: originalTrainData?.override || {},
+                    };
+                })).sort((a, b) => b.score - a.score); // Sort by score descending
             setInductionList(transformedInductionList);
             setLoading(false);
         } catch (error) {

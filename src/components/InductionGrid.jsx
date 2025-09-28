@@ -1,27 +1,20 @@
 import React from 'react';
 import InductionTrainCard from './InductionTrainCard';
+import { useTrainList } from '../context/TrainListContext';
 
-// Generate 25 mock trains named KM001 to KM025
-function generateMockTrains() {
-    return Array.from({ length: 25 }, (_, i) => ({
-        trainId: `KM${String(i + 1).padStart(3, '0')}`,
-        score: Math.floor(Math.random() * 100),
-        assignedBay: null,
-        violations: [],
-        override: { flag: false },
-    }));
-}
-
-// Assign trains to grid positions
+// Assign trains to grid positions using assignedBay from optimizer output
 function assignTrainsToGrid(trains) {
     const grid = {};
-    let idx = 0;
+    // Fill grid by assignedBay if present
+    trains.forEach(train => {
+        if (train.assignedBay && train.assignedBay.track && train.assignedBay.position) {
+            grid[`${train.assignedBay.track}_${train.assignedBay.position}`] = train;
+        }
+    });
+    // Fill empty slots with null
     for (let track = 1; track <= 13; track++) {
         for (let pos = 1; pos <= 2; pos++) {
-            if (idx < trains.length) {
-                grid[`${track}_${pos}`] = { ...trains[idx], assignedBay: { track, position: pos } };
-                idx++;
-            } else {
+            if (!grid[`${track}_${pos}`]) {
                 grid[`${track}_${pos}`] = null;
             }
         }
@@ -37,8 +30,8 @@ const getTypeLabel = (track, pos) => {
 };
 
 function InductionGrid() {
-    const trains = generateMockTrains();
-    const grid = assignTrainsToGrid(trains);
+    const { trainList } = useTrainList();
+    const grid = assignTrainsToGrid(trainList);
 
     return (
         <div className="w-full h-[calc(100vh-64px)] overflow-auto p-4 flex flex-col gap-8">

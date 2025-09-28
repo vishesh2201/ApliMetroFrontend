@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import WhatIfSimulation from './WhatIfSimulation';
 import Statistics from './Statistics';
 import { Train, ClipboardList, Zap, BarChart3, Settings, LogOut } from 'lucide-react';
+import InductionListDetailed from './InductionListDetailed';
 
 const menuItems = [
     { id: 'fleet', label: 'Fleet Status', icon: Train },
@@ -80,6 +81,11 @@ function Sidebar({ activeTab, onTabChange, onLogout }) {
                     </button>
                 </div>
             </div>
+            {activeTab === 'induction' && (
+                <div className="fixed inset-0 left-64 bg-white z-40 overflow-auto">
+                    <InductionListDetailed />
+                </div>
+            )}
             {/* What-If Simulation Page Overlay */}
             {activeTab === 'simulation' && (
                 <div className="fixed inset-0 left-64 bg-white z-40 overflow-auto">
