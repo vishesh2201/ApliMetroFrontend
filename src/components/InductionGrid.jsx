@@ -35,8 +35,9 @@ function InductionGrid() {
 
     // Handler for sending induction email
     const handleSendEmail = async () => {
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
         try {
-            const response = await fetch('/webhook-test/d49a6911-2574-400b-ac3b-e13eca8e3f8d', {
+            const response = await fetch(`${API_URL}/webhook-test/d49a6911-2574-400b-ac3b-e13eca8e3f8d`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -31,9 +31,10 @@ function WhatIfSimulation() {
     const handleRun = async () => {
         setOutput('Fetching latest train data...');
         setHasRun(true);
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
         let fleetData = [];
         try {
-            const res = await fetch('http://localhost:8000/api/trains');
+            const res = await fetch(`${API_URL}/api/trains`);
             if (!res.ok) throw new Error('Could not fetch train data');
             fleetData = await res.json();
         } catch (err) {
@@ -51,7 +52,7 @@ function WhatIfSimulation() {
         });
         setOutput('Running simulation...');
         try {
-            const res = await fetch('http://localhost:8000/whatIf/run/', {
+            const res = await fetch(`${API_URL}/whatIf/run/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const TrainListContext = createContext();
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export function TrainListProvider({ children }) {
     const [trainList, setTrainList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -9,7 +11,7 @@ export function TrainListProvider({ children }) {
 
     useEffect(() => {
         setLoading(true);
-        fetch('http://127.0.0.1:8000/api/trains/')
+        fetch(`${API_URL}/api/trains/`)
             .then((res) => {
                 if (!res.ok) throw new Error('Failed to fetch train list');
                 return res.json();

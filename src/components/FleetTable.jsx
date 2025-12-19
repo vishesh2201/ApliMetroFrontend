@@ -81,8 +81,9 @@ function FleetTable({ onTrainSelect }) {
     const handleGenerateOptimization = async () => {
         console.log("Generating optimization with current train data:", trainList);
         setLoading(true);
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
         try {
-            const response = await fetch('http://localhost:8000/optimizer/run/', {
+            const response = await fetch(`${API_URL}/optimizer/run/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

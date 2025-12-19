@@ -2,6 +2,8 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 
 const StatisticsContext = createContext(null);
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export const StatisticsProvider = ({ children }) => {
     const [totalTrains, setTotalTrains] = useState(0);
     const [jobCardBacklog, setJobCardBacklog] = useState(0);
@@ -10,12 +12,12 @@ export const StatisticsProvider = ({ children }) => {
     const [loadingOdo, setLoadingOdo] = useState(true);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/total-trains/')
+        fetch(`${API_URL}/api/total-trains/`)
             .then(response => response.json())
             .then(data => setTotalTrains(data.total_trains))
             .catch(error => console.error('Error fetching total trains:', error));
 
-        fetch('http://127.0.0.1:8000/api/jobcard-backlog/')
+        fetch(`${API_URL}/api/jobcard-backlog/`)
             .then(response => response.json())
             .then(data => {
                 setJobCardBacklog(data.total_jobcards);
@@ -23,7 +25,7 @@ export const StatisticsProvider = ({ children }) => {
             })
             .catch(error => console.error('Error fetching job card backlog:', error));
 
-        fetch('http://127.0.0.1:8000/api/train-age-distribution/')
+        fetch(`${API_URL}/api/train-age-distribution/`)
             .then(res => res.json())
             .then(data => {
                 setOdometers(data.odometers || []);
